@@ -10,11 +10,11 @@ namespace EShop.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
-        private ProductCategoryRepository productCategoryRepository = null;
+        private InMemoryRepository<ProductCategory> productCategoryRepository;
 
         public ProductCategoryManagerController()
         {
-            productCategoryRepository = new ProductCategoryRepository();
+            productCategoryRepository = new InMemoryRepository<ProductCategory>();
         }
 
         // GET: ProductCategoryManager
