@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using EShop.Core.Contracts;
 using EShop.DataAccess.InMemory;
 using EShop.Core.Models;
 
@@ -10,17 +11,17 @@ namespace EShop.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
-        private InMemoryRepository<ProductCategory> productCategoryRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
 
-        public ProductCategoryManagerController()
+        public ProductCategoryManagerController(IRepository<ProductCategory> productCategoryRepository)
         {
-            productCategoryRepository = new InMemoryRepository<ProductCategory>();
+            _productCategoryRepository = productCategoryRepository;
         }
 
         // GET: ProductCategoryManager
         public ActionResult Index()
         {
-            List<ProductCategory> productCategories = productCategoryRepository.Collection().ToList();
+            List<ProductCategory> productCategories = _productCategoryRepository.Collection().ToList();
             return View(productCategories);
         }
 
@@ -32,14 +33,14 @@ namespace EShop.WebUI.Controllers
         [HttpPost]
         public ActionResult Create(ProductCategory productCategoryToAdd)
         {
-            productCategoryRepository.Insert(productCategoryToAdd);
-            productCategoryRepository.Commit();
+            _productCategoryRepository.Insert(productCategoryToAdd);
+            _productCategoryRepository.Commit();
             return RedirectToAction("Index");
         }
 
         public ActionResult Edit(string id)
         {
-            ProductCategory productToEdit = productCategoryRepository.Find(id);
+            ProductCategory productToEdit = _productCategoryRepository.Find(id);
 
             if (productToEdit != null)
             {
@@ -54,15 +55,15 @@ namespace EShop.WebUI.Controllers
         [HttpPost]
         public ActionResult Edit(ProductCategory productCategoryToEdit)
         {
-            ProductCategory productCategory = productCategoryRepository.Find(productCategoryToEdit.Id);
+            ProductCategory productCategory = _productCategoryRepository.Find(productCategoryToEdit.Id);
             productCategory.Category = productCategoryToEdit.Category;
-            productCategoryRepository.Commit();
+            _productCategoryRepository.Commit();
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(string id)
         {
-            ProductCategory productToDelete = productCategoryRepository.Find(id);
+            ProductCategory productToDelete = _productCategoryRepository.Find(id);
 
             if (productToDelete != null)
             {
@@ -78,12 +79,12 @@ namespace EShop.WebUI.Controllers
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string id)
         {
-            ProductCategory productCategoryToDelete = productCategoryRepository.Find(id);
+            ProductCategory productCategoryToDelete = _productCategoryRepository.Find(id);
 
             if (productCategoryToDelete != null)
             {
-                productCategoryRepository.Delete(id);
-                productCategoryRepository.Commit();
+                _productCategoryRepository.Delete(id);
+                _productCategoryRepository.Commit();
                 return RedirectToAction("Index");
             }
             else

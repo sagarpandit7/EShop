@@ -4,11 +4,12 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
+using EShop.Core.Contracts;
 using EShop.Core.Models;
 
 namespace EShop.DataAccess.InMemory
 {
-    public class InMemoryRepository<T> where T : BaseEntity
+    public class InMemoryRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly ObjectCache _cache = MemoryCache.Default;
         private readonly List<T> _items;
