@@ -11,11 +11,11 @@ namespace EShop.WebUI.Controllers
 {
     public class ProductManagerController : Controller
     {
-        private InMemoryRepository<Product> context;
-        
+        private ProductRepository context;
+
         public ProductManagerController()
         {
-            context = new InMemoryRepository<Product>();
+            context = new ProductRepository();
         }
 
         // GET: ProductManager
