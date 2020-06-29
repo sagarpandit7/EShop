@@ -5,6 +5,8 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using EShop.Core.Contracts;
+
+
 using EShop.Core.Models;
 
 namespace EShop.DataAccess.InMemory
