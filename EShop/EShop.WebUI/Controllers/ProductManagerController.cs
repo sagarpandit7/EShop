@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -40,7 +41,7 @@ namespace EShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(Product product, HttpPostedFileBase file)
         {
             if (!ModelState.IsValid)
             {
@@ -48,6 +49,12 @@ namespace EShop.WebUI.Controllers
             }
             else
             {
+                if (file != null)
+                {
+                    product.Image = product.Id + Path.GetExtension(file.FileName);
+                    file.SaveAs(Server.MapPath("//Content//ProductImages//") + product.Image);
+                }
+
                 _productContext.Insert(product);
                 _productContext.Commit();
 
@@ -70,7 +77,7 @@ namespace EShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product, string Id)
+        public ActionResult Edit(Product product, string Id, HttpPostedFileBase file)
         {
             Product productToBeEdit = _productContext.Find(Id);
 
@@ -85,9 +92,14 @@ namespace EShop.WebUI.Controllers
                     return View(product);
                 }
 
+                if (file != null)
+                {
+                    productToBeEdit.Image = product.Id + Path.GetExtension(file.FileName);
+                    file.SaveAs(Server.MapPath("//Content//ProductImages//") + productToBeEdit.Image);
+                }
+
                 productToBeEdit.Category = product.Category;
                 productToBeEdit.Description = product.Description;
-                productToBeEdit.Image = product.Image;
                 productToBeEdit.Name = product.Name;
                 productToBeEdit.Price = product.Price;
 
