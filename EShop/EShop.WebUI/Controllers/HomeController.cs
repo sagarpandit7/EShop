@@ -4,6 +4,7 @@ using EShop.Core.Contracts;
 using System.Web.Mvc;
 using Antlr.Runtime.Misc;
 using EShop.Core.Models;
+using EShop.Core.ViewModels;
 
 namespace EShop.WebUI.Controllers
 {
@@ -19,10 +20,25 @@ namespace EShop.WebUI.Controllers
             this._productCategoryContext = productCategoryContext;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string Category=null)
         {
-            List<Product> products = _productContext.Collection().ToList(); 
-            return View(products);
+            List<Product> products;
+            List<ProductCategory> productCategories = _productCategoryContext.Collection().ToList();
+
+            if (Category == null)
+            {
+                products = _productContext.Collection().ToList();
+            }
+            else
+            {
+                products = _productContext.Collection().Where(p => p.Category == Category).ToList();
+            }
+
+            ProductListViewModel model = new ProductListViewModel();
+            model.Products = products;
+            model.ProductCategories = productCategories;
+
+            return View(model);
         }
 
         public ActionResult Details(string Id)
